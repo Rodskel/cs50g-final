@@ -87,7 +87,7 @@ public class TileScript : MonoBehaviour {
         // Getting player's distance from this tile
         _distanceFromPlayer = Vector3.Distance(this.transform.position, GameManager.Instance.PlayerScript.transform.position);
 
-        if (IsMineExploded)
+        if (IsMineExploded && !IsCovered)
         {
             // If the mine is exploded setting exploded texture and appropriate minimap sprite
             this.GetComponent<Renderer>().material = _explodedMaterial;
@@ -97,9 +97,6 @@ public class TileScript : MonoBehaviour {
         {
             // If the tile is uncovered setting texture and minimap sprite according to nearby mines
             this.GetComponent<Renderer>().material = _uncoveredMaterial;
-            //this.GetComponent<Renderer>().material.SetTexture("_MainTex", _uncoveredTexture);
-            //this.GetComponent<Renderer>().material.SetTexture("_BumpMap", _uncoveredNormal);
-            //this.GetComponent<Renderer>().material.SetTexture("_HeightMap", _uncoveredHeight);
             _minimapSpriteRenderer.sprite = _spritesArray[NearbyMines];
             // Optimizing performance with deactivating far text objects
             if (NearbyMines > 0 && !IsMine)
@@ -178,7 +175,6 @@ public class TileScript : MonoBehaviour {
                 {
                     float distance = Vector3.Distance(this.transform.position, rb.transform.position);
                     rb.GetComponent<PlayerScript>().DamagePlayer(Mathf.Lerp(_maxExplosionDamage, _minExplosionDamage, _damageCurve.Evaluate(distance / _blastRadius)));
-                    //Debug.Log($"Player got {Mathf.Lerp(_maxExplosionDamage, _minExplosionDamage, _damageCurve.Evaluate(distance / _blastRadius))} damage.");
                     // If player is dead
                     if (rb.GetComponent<PlayerScript>().Health <= 0)
                     {
